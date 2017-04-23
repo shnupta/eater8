@@ -12,11 +12,14 @@
 #define HIGH_NIBBLE(byte) (byte & 0xf0) >> 4
 
 typedef struct e8 {
-	uint8_t opcode;
-	uint8_t pc;
+	uint8_t pc; // program counter
+	
+	// the three registers
 	uint8_t A;
 	uint8_t B;
-	uint8_t RAM[512];
+	uint8_t IR; // instruction register
+
+	uint8_t RAM[16]; //16 bytes of RAM as he only uses 4 bit memory addresses
 	bool halt;
 	int out;
 } e8;

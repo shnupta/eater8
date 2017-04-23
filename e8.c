@@ -4,7 +4,7 @@
 void decode_opcode(e8 *cpu)
 {
 	//printf("%d\n", cpu->pc);
-	uint8_t op = HIGH_NIBBLE(cpu->opcode);
+	uint8_t op = HIGH_NIBBLE(cpu->IR);
 	
 	//printf("%d\n", op);	
 
@@ -15,12 +15,12 @@ void decode_opcode(e8 *cpu)
 	
 		// LDA
 		case 0b0001:
-			cpu->A = cpu->RAM[LOW_NIBBLE(cpu->opcode)];
+			cpu->A = cpu->RAM[LOW_NIBBLE(cpu->IR)];
 			break;
 
 		// ADD
 		case 0b0010:
-			cpu->A = (int) cpu->A + (cpu->RAM[LOW_NIBBLE(cpu->opcode)]);
+			cpu->A = (int) cpu->A + (cpu->RAM[LOW_NIBBLE(cpu->IR)]);
 			break;
 
 		// SUB
@@ -88,6 +88,8 @@ int load_ram(e8 *cpu, char *filename)
 	}	
 */
 
+
+	// Basic program from video that adds two numbers to output 42
 	cpu->RAM[0b0000] = 0b00010100;
 	cpu->RAM[0b0001] = 0b00100101;
 	cpu->RAM[0b0010] = 0b01010000;
@@ -105,7 +107,7 @@ int init_e8(e8 *cpu)
 	cpu->B = 0;
 	cpu->pc = 0b0000;
 	cpu->out = -1;
-	memset(cpu->RAM, 0, 512);
+	memset(cpu->RAM, 0, 16);
 	
 	return 1;
 }
@@ -122,7 +124,7 @@ int main(int argc, char *argv[])
 
 	int i = 0;
 	while(!cpu.halt) {
-		cpu.opcode = cpu.RAM[cpu.pc];
+		cpu.IR = cpu.RAM[cpu.pc];
 		//printf("%d\n", cpu.opcode);
 		decode_opcode(&cpu);
 		cpu.pc += 0b0001;
